@@ -1,60 +1,45 @@
-/*struct User {
-    name: String,
-    age: i32,
-    active: bool,
-}
-fn main() {
-    let user1 = User {
-        name: String::from("Ilshat"),
-        age: 32,
-        active: true,
-    };
-    println!("{}", user1.name)
-}*/
-
-struct FileInfo {
-    name: String,
-    size: u64,
-    is_readonly: bool,
+/*enum Operation {
+    Add,
+    Sub,
+    Mul,
+    Div,
 }
 
-impl FileInfo {
-    fn print_info(&self) {
-        println!(
-            "name: {}, size: {}, is_readonly: {}",
-            self.name, self.size, self.is_readonly
-        );
-    }
-    fn is_empty(&self) -> bool {
-        if self.size == 0 {
-            return true;
-        } else {
-            return false;
-        }
+fn calculate(operation: Operation, num1: i32, num2: i32) -> i32 {
+    match operation {
+        Operation::Add => num1 + num2,
+        Operation::Sub => num1 - num2,
+        Operation::Mul => num1 * num2,
+        Operation::Div => num1 / num2,
     }
 }
 
-fn print_file_info(file: &FileInfo) {
-    println!(
-        "name: {}, size: {}, is_readonly: {}",
-        file.name, file.size, file.is_readonly
-    );
+fn main() {
+    let add = calculate(Operation::Add, 10, 12);
+    let sub = calculate(Operation::Sub, 10, 12);
+    let div = calculate(Operation::Div, 10, 12);
+    let mul = calculate(Operation::Mul, 10, 12);
+
+    println!("Add -{}, Sub -{}, Div - {}, Mul - {}", add, sub, div, mul)
+}
+*/
+enum Message {
+    Text(String),
+    Number(i32),
+    Empty,
+}
+fn print_message(message: Message) {
+    match message {
+        Message::Text(value) => println!("{}", value),
+        Message::Number(value) => println!("{}", value),
+        Message::Empty => println!("сообщение пустое"),
+    }
 }
 
 fn main() {
-    let file1 = FileInfo {
-        name: String::from("ZIP"),
-        size: 10,
-        is_readonly: true,
-    };
-    let file2 = FileInfo {
-        name: String::from("RAR"),
-        size: 0,
-        is_readonly: true,
-    };
-
-    file1.print_info();
-    file2.print_info();
-    println!("1 - {}, 2 - {}", file1.is_empty(), file2.is_empty());
-    print_file_info(&file1);
+    let text = String::from("Hello");
+    let number: i32 = 12;
+    print_message(Message::Text(text));
+    print_message(Message::Number(number));
+    print_message(Message::Empty);
 }
