@@ -1,45 +1,29 @@
-/*enum Operation {
-    Add,
-    Sub,
-    Mul,
-    Div,
-}
-
-fn calculate(operation: Operation, num1: i32, num2: i32) -> i32 {
-    match operation {
-        Operation::Add => num1 + num2,
-        Operation::Sub => num1 - num2,
-        Operation::Mul => num1 * num2,
-        Operation::Div => num1 / num2,
+fn first_word(text: &str) -> Option<&str> {
+    if text.is_empty() {
+        return None;
     }
+    for (i, ch) in text.char_indices() {
+        if ch == ' ' {
+            return Some(&text[..i]);
+        }
+    }
+    return Some(text);
 }
 
 fn main() {
-    let add = calculate(Operation::Add, 10, 12);
-    let sub = calculate(Operation::Sub, 10, 12);
-    let div = calculate(Operation::Div, 10, 12);
-    let mul = calculate(Operation::Mul, 10, 12);
-
-    println!("Add -{}, Sub -{}, Div - {}, Mul - {}", add, sub, div, mul)
-}
-*/
-enum Message {
-    Text(String),
-    Number(i32),
-    Empty,
-}
-fn print_message(message: Message) {
-    match message {
-        Message::Text(value) => println!("{}", value),
-        Message::Number(value) => println!("{}", value),
-        Message::Empty => println!("сообщение пустое"),
+    let text1 = "Hello World";
+    let text2 = "Rust";
+    let text3 = "";
+    match first_word(text1) {
+        Some(value) => println!("{}", value),
+        None => println!("Пусто"),
     }
-}
-
-fn main() {
-    let text = String::from("Hello");
-    let number: i32 = 12;
-    print_message(Message::Text(text));
-    print_message(Message::Number(number));
-    print_message(Message::Empty);
+    match first_word(text2) {
+        Some(value) => println!("{}", value),
+        None => println!("Пусто"),
+    }
+    match first_word(text3) {
+        Some(value) => println!("{}", value),
+        None => println!("Пусто"),
+    }
 }
