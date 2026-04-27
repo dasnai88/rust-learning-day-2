@@ -8,6 +8,7 @@ fn main() {
     for word in &words {
         if word.chars().count() > 4 {
             println!("{}", word);
+            println!();
         }
     }
 }
