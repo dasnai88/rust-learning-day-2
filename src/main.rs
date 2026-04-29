@@ -1,27 +1,39 @@
-fn read_file(path: &str) -> Result<String, std::io::Error> {
-    return std::fs::read_to_string(path);
+fn read_bytes(path: &str) -> Result<Vec<u8>, std::io::Error> {
+    std::fs::read(path)
 }
-fn print_file_stats(content: &str) {
-    println!(
-        "bytes => {}, simvols => {}, stroki => {}, Words => {}",
-        content.len(),
-        content.chars().count(),
-        content.lines().count(),
-        content.split_whitespace().count()
-    );
+
+fn print_hex_line(offset: usize, bytes: &[u8]) {
+    print!("{:08X}: ", offset);
+
+    for byte in bytes {
+        print!("{:02X} ", byte);
+    }
+
+    println!();
 }
-fn analyze_file(path: &str) {
-    match read_file(path) {
-        Ok(value) => {
-            println!("{}", value);
-            print_file_stats(&value);
+
+fn analyze_bytes(path: &str) {
+    match read_bytes(path) {
+        Ok(bytes) => {
+            println!("file: {}", path);
+            println!("bytes: {}", bytes.len());
+
+            print_hex_dump(&bytes);
         }
-        Err(_) => println!("Ошибка"),
+        Err(err) => {
+            println!("Ошибка: {}", err);
+        }
     }
 }
+
+fn print_hex_dump(bytes: &[u8]) {
+    for (i, chunk) in bytes.chunks(16).enumerate() {
+        let offset = i * 16;
+        print_hex_line(offset, chunk);
+    }
+}
+
 fn main() {
-    let path1 = "test.txt";
-    let path2 = "missing.txt";
-    analyze_file(path1);
-    analyze_file(path2);
+    analyze_bytes("test.txt");
+    analyze_bytes("missing.txt");
 }
