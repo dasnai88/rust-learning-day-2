@@ -8,8 +8,17 @@ fn print_hex_line(offset: usize, bytes: &[u8]) {
     for byte in bytes {
         print!("{:02X} ", byte);
     }
+    print!(" |");
+    for byte in bytes {
+        if byte.is_ascii_graphic() {}
+    }
+}
 
-    println!();
+fn print_hex_dump(bytes: &[u8]) {
+    for (i, chunk) in bytes.chunks(16).enumerate() {
+        let offset = i * 16;
+        print_hex_line(offset, chunk);
+    }
 }
 
 fn analyze_bytes(path: &str) {
@@ -23,13 +32,6 @@ fn analyze_bytes(path: &str) {
         Err(err) => {
             println!("Ошибка: {}", err);
         }
-    }
-}
-
-fn print_hex_dump(bytes: &[u8]) {
-    for (i, chunk) in bytes.chunks(16).enumerate() {
-        let offset = i * 16;
-        print_hex_line(offset, chunk);
     }
 }
 
