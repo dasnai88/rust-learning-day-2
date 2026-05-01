@@ -8,17 +8,22 @@ fn print_hex_line(offset: usize, bytes: &[u8]) {
     for byte in bytes {
         print!("{:02X} ", byte);
     }
-    print!(" |");
-    for byte in bytes {
-        if byte.is_ascii_graphic() {}
-    }
-}
 
-fn print_hex_dump(bytes: &[u8]) {
-    for (i, chunk) in bytes.chunks(16).enumerate() {
-        let offset = i * 16;
-        print_hex_line(offset, chunk);
+    for _ in bytes.len()..16 {
+        print!("   ");
     }
+
+    print!(" |");
+
+    for byte in bytes {
+        if byte.is_ascii_graphic() || *byte == b' ' {
+            print!("{}", *byte as char);
+        } else {
+            print!(".");
+        }
+    }
+
+    println!("|");
 }
 
 fn analyze_bytes(path: &str) {
@@ -27,12 +32,49 @@ fn analyze_bytes(path: &str) {
             println!("file: {}", path);
             println!("bytes: {}", bytes.len());
 
-            print_hex_dump(&bytes);
+            print_hex_dump_limited(&bytes, 8);
+            let pattern = b"Rust";
+            let offsets = find_all_patterns(&bytes, pattern);
+
+            if offsets.is_empty() {
+                println!("pattern not found");
+            } else {
+                println!("pattern found at offsets: {:?}", offsets);
+            }
         }
         Err(err) => {
             println!("Ошибка: {}", err);
         }
     }
+}
+
+fn print_hex_dump_limited(bytes: &[u8], max_lines: usize) {
+    for (i, chunks) in bytes.chunks(16).take(max_lines).enumerate() {
+        let offset = i * 16;
+        print_hex_line(offset, chunks);
+    }
+}
+
+fn find_pattern(bytes: &[u8], pattern: &[u8]) -> Option<usize> {
+    if pattern.is_empty() {
+        return None;
+    }
+    for (i, window) in bytes.windows(pattern.len()).enumerate() {
+        if window == pattern {
+            return Some(i);
+        }
+    }
+    None
+}
+
+fn find_all_patterns(bytes: &[u8], pattern: &[u8]) -> Vec<usize> {
+    let mut offsets = Vec::new();
+    for (i, window) in bytes.windows(pattern.len()).enumerate() {
+        if window == pattern {
+            offsets.push(i);
+        }
+    }
+    return offsets;
 }
 
 fn main() {
